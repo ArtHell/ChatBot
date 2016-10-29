@@ -13,7 +13,12 @@ namespace MyBot.Controllers
     [BotAuthentication]
     public class MessagesController : ApiController
     {
-        private Game game = new Game();
+        private Game game;
+
+        public MessagesController()
+        {
+            this.game = new Game();
+        }
 
         public async Task<HttpResponseMessage> Post([FromBody]Activity activity)
         {
