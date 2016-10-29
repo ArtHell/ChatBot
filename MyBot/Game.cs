@@ -69,14 +69,17 @@ namespace MyBot
             if (info != null)
             {
                 gameInfo = info;
+                if (gameInfo.MyField != null && gameInfo.EnemyField != null)
+                {
+                    myField = gameInfo.MyField.ToCharArray();
+                    enemyField = gameInfo.EnemyField.ToCharArray();
+                }
             }
             else
             {
                 gameInfo = new GameInfo() {GameStarted = false, RecipientId = recipientId};
                 gameInfoRepository.AddGameInfo(gameInfo);
             }
-            myField = gameInfo.MyField.ToCharArray();
-            enemyField = gameInfo.EnemyField.ToCharArray();
                 
             if (!gameInfo.GameStarted && method != "Start")
             {
