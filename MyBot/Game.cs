@@ -13,6 +13,7 @@ namespace MyBot
         private int enemyAliveCells;
         private int enemyLine;
         private int enemyColumn;
+        private bool gameStarted;
         private delegate string OperationDelegate();
         private readonly Dictionary<string, OperationDelegate> methods;
         
@@ -31,6 +32,7 @@ namespace MyBot
                                            "1010000000";
 
         private const string BadRequestAnswer = "Can you repeat, please?";
+        private const string SayStartAnswer = "You sould start game before.";
         private const string UserWonAnswer = "You won, congratulations.";
         private const string UserHitAnswer = "You hitted.";
         private const string UserMissAnswer = "You missed.";
@@ -54,13 +56,20 @@ namespace MyBot
                     { "Positive answer", PositiveAnswer },
                     { "Dead answer", DeadAnswer }
                 };
-            StartNewGame();
         }
 
         public string Play(string method, string x = "", string y = "")
         {
             if (!methods.ContainsKey(method))
+            {
                 return BadRequestAnswer;
+            }
+                
+            if (!gameStarted && method != "Start")
+            {
+                return SayStartAnswer;
+            }
+
             if (method == "Hit")
             {
                 if (!GetLineFromRequest(x) || !GetColumnFromRequest(y))
@@ -77,6 +86,7 @@ namespace MyBot
             enemyField = EmptyField();
             enemyAliveCells = 20;
             myAliveCells = 20;
+            gameStarted = true;
         }
 
         private char[] GenerateShips()
@@ -97,7 +107,7 @@ namespace MyBot
             enemyField[EnemyIndex] = '1';
             enemyAliveCells--;
             if (enemyAliveCells != 0) return MakeGuess();
-            StartNewGame();
+            gameStarted = false;
             return UserLoseAnswer;
         }
 
@@ -106,7 +116,7 @@ namespace MyBot
             enemyField[EnemyIndex] = '1';
             enemyAliveCells--;
             if (enemyAliveCells != 0) return MakeGuess();
-            StartNewGame();
+            gameStarted = false;
             return UserLoseAnswer;
         }
 
@@ -123,7 +133,7 @@ namespace MyBot
                 myAliveCells--;
                 if (myAliveCells == 0)
                 {
-                    StartNewGame();
+                    gameStarted = false;
                     return UserWonAnswer;    
                 }
                 else
@@ -139,6 +149,7 @@ namespace MyBot
 
         private string Start()
         {
+            StartNewGame();
             return MakeGuess();
         }
 
@@ -150,7 +161,7 @@ namespace MyBot
                 enemyColumn = index%10;
                 enemyLine = index/10;
             } while (enemyField[EnemyIndex] != '0');
-            return string.Format(MyHitAnswer, enemyLine, (char) (enemyColumn + 65));
+            return string.Format(MyHitAnswer, enemyLine, (char) (enemyColumn + 66));
         }
 
         private bool GetLineFromRequest(string s)
@@ -169,7 +180,7 @@ namespace MyBot
 
         private bool GetColumnFromRequest(string s)
         {
-            var index = char.ToUpper(s[0]) - 65;
+            var index = char.ToUpper(s[0]) - 66;
             if (index > 0 && index < 10)
             {
                 column = index;
