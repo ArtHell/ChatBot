@@ -119,7 +119,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Game.cs" />
+    <Compile Include="Models\Intent.cs" />
+    <Compile Include="Service\Luis.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
+    <Compile Include="Models\ResponseFromLUIS.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
