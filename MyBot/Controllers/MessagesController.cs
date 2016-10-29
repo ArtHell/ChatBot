@@ -31,15 +31,16 @@ namespace MyBot.Controllers
                 }
 
                 var type = intents.OrderByDescending(x => x.Score).First().Type;
+                string gameReply;
                 if (type == "hit")
                 {
-                    game.Play(type, (string) answer.entities[0].entity, (string) answer.entities[1].entity);
+                    gameReply = game.Play(type, (string) answer.entities[0].entity, (string) answer.entities[1].entity);
                 }
                 else
                 {
-                    game.Play(type);
+                    gameReply = game.Play(type);
                 }
-                Activity reply = activity.CreateReply($"You sent {activity.Text} which was characters. Good luck and have fun!");
+                Activity reply = activity.CreateReply(gameReply);
                 await connector.Conversations.ReplyToActivityAsync(reply);
             }
             var response = Request.CreateResponse(HttpStatusCode.OK);
