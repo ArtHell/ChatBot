@@ -33,6 +33,12 @@ namespace MyBot.Repositories
             return db.GameInfos.FirstOrDefault(x => x.RecipientId == recipientId);
         }
 
+        public void AddGameInfo(GameInfo gameInfo)
+        {
+            db.GameInfos.Add(gameInfo);
+            db.SaveChanges();
+        }
+
         public void SaveGameInfo(GameInfo gameInfo)
         {
             db.Entry(gameInfo).State = System.Data.Entity.EntityState.Modified;

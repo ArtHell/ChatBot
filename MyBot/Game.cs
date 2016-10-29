@@ -65,14 +65,15 @@ namespace MyBot
                 return BadRequestAnswer;
             }
 
-            if (gameInfoRepository.GetGameInfo(recipientId) != null)
+            var info = gameInfoRepository.GetGameInfo(recipientId);
+            if (info != null)
             {
-                gameInfo = gameInfoRepository.GetGameInfo(recipientId);
+                gameInfo = info;
             }
             else
             {
                 gameInfo = new GameInfo() {GameStarted = false, RecipientId = recipientId};
-                gameInfoRepository.SaveGameInfo(gameInfo);
+                gameInfoRepository.AddGameInfo(gameInfo);
             }
             myField = gameInfo.MyField.ToCharArray();
             enemyField = gameInfo.EnemyField.ToCharArray();
