@@ -13,12 +13,7 @@ namespace MyBot.Controllers
     [BotAuthentication]
     public class MessagesController : ApiController
     {
-        private Game game;
-
-        public MessagesController()
-        {
-            this.game = new Game();
-        }
+        private readonly Game game = new Game();
 
         public async Task<HttpResponseMessage> Post([FromBody]Activity activity)
         {
@@ -39,11 +34,11 @@ namespace MyBot.Controllers
                 string gameReply;
                 if (type == "hit")
                 {
-                    gameReply = game.Play(type, (string) answer.entities[0].entity, (string) answer.entities[1].entity);
+                    gameReply = game.Play(activity.Recipient.Id, type, (string) answer.entities[0].entity, (string) answer.entities[1].entity);
                 }
                 else
                 {
-                    gameReply = game.Play(type);
+                    gameReply = game.Play(activity.Recipient.Id, type);
                 }
                 Activity reply = activity.CreateReply(gameReply);
                 await connector.Conversations.ReplyToActivityAsync(reply);

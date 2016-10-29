@@ -1,22 +1,20 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using MyBot.Models;
+using MyBot.Repositories;
 
 namespace MyBot
 {
     public class Game
     {
+        private readonly GameInfoRepository gameInfoRepository = new GameInfoRepository();
         private readonly Random random;
-        private int line;
-        private int column;
-        private int myAliveCells;
-        private int enemyAliveCells;
-        private int enemyLine;
-        private int enemyColumn;
-        private bool gameStarted;
+
         private delegate string OperationDelegate();
         private readonly Dictionary<string, OperationDelegate> methods;
-        
+
+        private GameInfo gameInfo;
         private char[] myField;
         private char[] enemyField;
 
@@ -40,8 +38,8 @@ namespace MyBot
         private const string UserLoseAnswer = "Sorry, but you losed.";
         private const string MyHitAnswer = "Line {0}, colomn {1}.";
 
-        private int Index => line * 10 + column;
-        private int EnemyIndex => enemyLine * 10 + enemyColumn;
+        private int Index => gameInfo.Line * 10 + gameInfo.Column;
+        private int EnemyIndex => gameInfo.EnemyLine * 10 + gameInfo.EnemyColumn;
 
         public Game()
         {
@@ -56,16 +54,30 @@ namespace MyBot
                     { "Positive answer", PositiveAnswer },
                     { "Dead answer", DeadAnswer }
                 };
+
+
         }
 
-        public string Play(string method, string x = "", string y = "")
+        public string Play(string recipientId,string method, string x = "", string y = "")
         {
             if (!methods.ContainsKey(method))
             {
                 return BadRequestAnswer;
             }
+
+            if (gameInfoRepository.GetGameInfo(recipientId) != null)
+            {
+                gameInfo = gameInfoRepository.GetGameInfo(recipientId);
+            }
+            else
+            {
+                gameInfo = new GameInfo() {GameStarted = false, RecipientId = recipientId};
+                gameInfoRepository.SaveGameInfo(gameInfo);
+            }
+            myField = gameInfo.MyField.ToCharArray();
+            enemyField = gameInfo.EnemyField.ToCharArray();
                 
-            if (!gameStarted && method != "Start")
+            if (!gameInfo.GameStarted && method != "Start")
             {
                 return SayStartAnswer;
             }
@@ -84,9 +96,9 @@ namespace MyBot
         {
             myField = GenerateShips();
             enemyField = EmptyField();
-            enemyAliveCells = 20;
-            myAliveCells = 20;
-            gameStarted = true;
+            gameInfo.EnemyAliveCells = 20;
+            gameInfo.MyAliveCells = 20;
+            gameInfo.GameStarted = true;
         }
 
         private char[] GenerateShips()
@@ -105,18 +117,27 @@ namespace MyBot
         private string DeadAnswer()
         {
             enemyField[EnemyIndex] = '1';
-            enemyAliveCells--;
-            if (enemyAliveCells != 0) return MakeGuess();
-            gameStarted = false;
+            gameInfo.EnemyAliveCells--;
+            if (gameInfo.EnemyAliveCells != 0) return MakeGuess();
+            gameInfo.GameStarted = false;
+            SaveGameInfo();
             return UserLoseAnswer;
+        }
+
+        private void SaveGameInfo()
+        {
+            gameInfo.MyField = new string(myField);
+            gameInfo.EnemyField = new string(enemyField);
+            gameInfoRepository.SaveGameInfo(gameInfo);
         }
 
         private string PositiveAnswer()
         {
             enemyField[EnemyIndex] = '1';
-            enemyAliveCells--;
-            if (enemyAliveCells != 0) return MakeGuess();
-            gameStarted = false;
+            gameInfo.EnemyAliveCells--;
+            if (gameInfo.EnemyAliveCells != 0) return MakeGuess();
+            gameInfo.GameStarted = false;
+            SaveGameInfo();
             return UserLoseAnswer;
         }
 
@@ -127,13 +148,15 @@ namespace MyBot
 
         private string Hit()
         {
-            if (myField[Index] == '1')
+            if (gameInfo.MyField[Index] == '1')
             {
                 myField[Index] = '0';
-                myAliveCells--;
-                if (myAliveCells == 0)
+                gameInfo.MyAliveCells--;
+                SaveGameInfo();
+                if (gameInfo.MyAliveCells == 0)
                 {
-                    gameStarted = false;
+                    gameInfo.GameStarted = false;
+                    SaveGameInfo();
                     return UserWonAnswer;    
                 }
                 else
@@ -158,10 +181,10 @@ namespace MyBot
             do
             {
                 var index = random.Next(100);
-                enemyColumn = index%10;
-                enemyLine = index/10;
-            } while (enemyField[EnemyIndex] != '0');
-            return string.Format(MyHitAnswer, enemyLine, (char) (enemyColumn + 66));
+                gameInfo.EnemyColumn = index%10;
+                gameInfo.EnemyLine = index/10;
+            } while (gameInfo.EnemyField[EnemyIndex] != '0');
+            return string.Format(MyHitAnswer, gameInfo.EnemyLine, (char) (gameInfo.EnemyColumn + 66));
         }
 
         private bool GetLineFromRequest(string s)
@@ -169,7 +192,7 @@ namespace MyBot
             var index = int.Parse(s);
             if (index > 0 && index < 10)
             {
-                line = index;
+                gameInfo.Line = index;
                 return true;
             }
             else
@@ -183,7 +206,7 @@ namespace MyBot
             var index = char.ToUpper(s[0]) - 66;
             if (index > 0 && index < 10)
             {
-                column = index;
+                gameInfo.Column = index;
                 return true;
             }
             else
