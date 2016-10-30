@@ -89,6 +89,7 @@ namespace MyBot
                 {
                     return BadRequestAnswer;
                 }
+                SaveGameInfo();
             }
             return methods[method]();
         }
@@ -117,8 +118,6 @@ namespace MyBot
 
         private string DeadAnswer()
         {
-            var index = gameInfo.EnemyLine*10 + gameInfo.EnemyColumn;
-            enemyField[index] = '1';
             gameInfo.EnemyAliveCells--;
             if (gameInfo.EnemyAliveCells != 0) return MakeGuess();
             gameInfo.GameStarted = false;
@@ -135,8 +134,6 @@ namespace MyBot
 
         private string PositiveAnswer()
         {
-            var index = gameInfo.EnemyLine * 10 + gameInfo.EnemyColumn;
-            enemyField[index] = '1';
             gameInfo.EnemyAliveCells--;
             if (gameInfo.EnemyAliveCells != 0) return MakeGuess();
             gameInfo.GameStarted = false;
@@ -189,6 +186,7 @@ namespace MyBot
             } while (enemyField[index] != '0');
             gameInfo.EnemyColumn = index % 10;
             gameInfo.EnemyLine = index / 10;
+            enemyField[index] = '1';
             SaveGameInfo();
             return string.Format(MyHitAnswer, gameInfo.EnemyLine + 1, (char)(gameInfo.EnemyColumn + 65));
         }
