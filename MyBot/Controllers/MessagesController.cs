@@ -34,7 +34,7 @@ namespace MyBot.Controllers
                 string gameReply;
                 if (type == "Hit")
                 {
-                    gameReply = game.Play(activity.Recipient.Id, type, (string) answer.entities[0].entity, (string) answer.entities[1].entity);
+                    gameReply = game.Play(activity.Recipient.Id, type, (string) answer.entities[1].entity, (string) answer.entities[0].entity);
                 }
                 else
                 {
