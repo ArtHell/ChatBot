@@ -32,7 +32,7 @@ namespace MyBot.Controllers
 
                 var type = intents.OrderByDescending(x => x.Score).First().Type;
                 string gameReply;
-                if (type == "hit")
+                if (type == "Hit")
                 {
                     gameReply = game.Play(activity.Recipient.Id, type, (string) answer.entities[0].entity, (string) answer.entities[1].entity);
                 }
