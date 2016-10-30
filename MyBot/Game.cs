@@ -58,7 +58,7 @@ namespace MyBot
 
         }
 
-        public string Play(string recipientId,string method, string x = "", string y = "")
+        public string Play(string recipientId, string method, string x = "", string y = "")
         {
             if (!methods.ContainsKey(method))
             {
@@ -77,10 +77,10 @@ namespace MyBot
             }
             else
             {
-                gameInfo = new GameInfo() {GameStarted = false, RecipientId = recipientId};
+                gameInfo = new GameInfo() { GameStarted = false, RecipientId = recipientId };
                 gameInfoRepository.AddGameInfo(gameInfo);
             }
-                
+
             if (!gameInfo.GameStarted && method != "Start")
             {
                 return SayStartAnswer;
@@ -103,12 +103,13 @@ namespace MyBot
             gameInfo.EnemyAliveCells = 20;
             gameInfo.MyAliveCells = 20;
             gameInfo.GameStarted = true;
+            SaveGameInfo();
         }
 
         private char[] GenerateShips()
         {
             var field = RandomField.ToCharArray();
-            
+
             return field;
         }
 
@@ -152,7 +153,7 @@ namespace MyBot
 
         private string Hit()
         {
-            if (gameInfo.MyField[Index] == '1')
+            if (myField[Index] == '1')
             {
                 myField[Index] = '0';
                 gameInfo.MyAliveCells--;
@@ -161,7 +162,7 @@ namespace MyBot
                 {
                     gameInfo.GameStarted = false;
                     SaveGameInfo();
-                    return UserWonAnswer;    
+                    return UserWonAnswer;
                 }
                 else
                 {
@@ -185,16 +186,16 @@ namespace MyBot
             do
             {
                 var index = random.Next(100);
-                gameInfo.EnemyColumn = index%10;
-                gameInfo.EnemyLine = index/10;
-            } while (gameInfo.EnemyField[EnemyIndex] != '0');
-            return string.Format(MyHitAnswer, gameInfo.EnemyLine, (char) (gameInfo.EnemyColumn + 66));
+                gameInfo.EnemyColumn = index % 10;
+                gameInfo.EnemyLine = index / 10;
+            } while (enemyField[EnemyIndex] != '0');
+            return string.Format(MyHitAnswer, gameInfo.EnemyLine, (char)(gameInfo.EnemyColumn + 65));
         }
 
         private bool GetLineFromRequest(string s)
         {
-            var index = int.Parse(s);
-            if (index > 0 && index < 10)
+            var index = int.Parse(s) - 1;
+            if (index >= 0 && index < 10)
             {
                 gameInfo.Line = index;
                 return true;
@@ -207,8 +208,8 @@ namespace MyBot
 
         private bool GetColumnFromRequest(string s)
         {
-            var index = char.ToUpper(s[0]) - 66;
-            if (index > 0 && index < 10)
+            var index = char.ToUpper(s[0]) - 65;
+            if (index >= 0 && index < 10)
             {
                 gameInfo.Column = index;
                 return true;
