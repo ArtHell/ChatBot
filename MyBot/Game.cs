@@ -38,9 +38,6 @@ namespace MyBot
         private const string UserLoseAnswer = "Sorry, but you losed.";
         private const string MyHitAnswer = "Line {0}, colomn {1}.";
 
-        private int Index => gameInfo.Line * 10 + gameInfo.Column;
-        private int EnemyIndex => gameInfo.EnemyLine * 10 + gameInfo.EnemyColumn;
-
         public Game()
         {
             random = new Random(DateTime.Now.Millisecond);
@@ -120,7 +117,8 @@ namespace MyBot
 
         private string DeadAnswer()
         {
-            enemyField[EnemyIndex] = '1';
+            var index = gameInfo.EnemyLine*10 + gameInfo.EnemyColumn;
+            enemyField[index] = '1';
             gameInfo.EnemyAliveCells--;
             if (gameInfo.EnemyAliveCells != 0) return MakeGuess();
             gameInfo.GameStarted = false;
@@ -137,7 +135,8 @@ namespace MyBot
 
         private string PositiveAnswer()
         {
-            enemyField[EnemyIndex] = '1';
+            var index = gameInfo.EnemyLine * 10 + gameInfo.EnemyColumn;
+            enemyField[index] = '1';
             gameInfo.EnemyAliveCells--;
             if (gameInfo.EnemyAliveCells != 0) return MakeGuess();
             gameInfo.GameStarted = false;
@@ -152,9 +151,10 @@ namespace MyBot
 
         private string Hit()
         {
-            if (myField[Index] == '1')
+            var index = gameInfo.Line*10 + gameInfo.Column;
+            if (myField[index] == '1')
             {
-                myField[Index] = '0';
+                myField[index] = '0';
                 gameInfo.MyAliveCells--;
                 SaveGameInfo();
                 if (gameInfo.MyAliveCells == 0)
@@ -182,14 +182,15 @@ namespace MyBot
 
         private string MakeGuess()
         {
+            int index;
             do
             {
-                var index = random.Next(100);
-                gameInfo.EnemyColumn = index % 10;
-                gameInfo.EnemyLine = index / 10;
-            } while (enemyField[EnemyIndex] != '0');
+                index = random.Next(100);
+            } while (enemyField[index] != '0');
+            gameInfo.EnemyColumn = index % 10;
+            gameInfo.EnemyLine = index / 10;
             SaveGameInfo();
-            return string.Format(MyHitAnswer, gameInfo.EnemyLine, (char)(gameInfo.EnemyColumn + 65));
+            return string.Format(MyHitAnswer, gameInfo.EnemyLine + 1, (char)(gameInfo.EnemyColumn + 65));
         }
 
         private bool GetLineFromRequest(string s)
