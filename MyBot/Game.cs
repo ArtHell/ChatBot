@@ -103,7 +103,6 @@ namespace MyBot
             gameInfo.EnemyAliveCells = 20;
             gameInfo.MyAliveCells = 20;
             gameInfo.GameStarted = true;
-            SaveGameInfo();
         }
 
         private char[] GenerateShips()
@@ -189,6 +188,7 @@ namespace MyBot
                 gameInfo.EnemyColumn = index % 10;
                 gameInfo.EnemyLine = index / 10;
             } while (enemyField[EnemyIndex] != '0');
+            SaveGameInfo();
             return string.Format(MyHitAnswer, gameInfo.EnemyLine, (char)(gameInfo.EnemyColumn + 65));
         }
 
