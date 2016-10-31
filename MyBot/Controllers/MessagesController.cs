@@ -45,11 +45,11 @@ namespace MyBot.Controllers
                         line = (string)answer.entities[1].entity;
                         column = (string)answer.entities[0].entity;
                     }
-                    gameReply = game.Play(activity.Recipient.Id, type, line, column);
+                    gameReply = game.Play(activity.From.Id, type, line, column);
                 }
                 else
                 {
-                    gameReply = game.Play(activity.Recipient.Id, type);
+                    gameReply = game.Play(activity.From.Id, type);
                 }
                 Activity reply = activity.CreateReply(gameReply);
                 await connector.Conversations.ReplyToActivityAsync(reply);
