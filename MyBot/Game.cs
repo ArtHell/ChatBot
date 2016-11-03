@@ -142,29 +142,32 @@ namespace MyBot
 
         private static bool IsValidPlace(char[] field, int place, int length, int orientation)
         {
-            if(orientation == 0)
+            var x = place % 10;
+            var y = place / 10;
+            if (orientation == 0)
             {
-                if (place % 10 + length >= 10) return false;
+                if (x + length >= 10) return false;
             }
             else
             {
-                if (place / 10 + length >= 10) return false;
+                if (y + length >= 10) return false;
             }
 
             int leftBorder, topBorder, rightBorder, bottomBorder;
-            topBorder = place / 10 == 0 ? place : place - 10;
-            leftBorder = place % 10 == 0 ? place : place - 1;
+            topBorder = y == 0 ? y : y - 1;
+            leftBorder = x == 0 ? x : x - 1;
 
             if (orientation == 0)
             {
-                bottomBorder = place / 10 == 9 ? place : place + 10;
-                rightBorder = place % 10 + length == 9 ? place + length : place + length + 1;
-            } else
-            {
-                bottomBorder = place / 10 + length == 9 ? place + length * 10 : place + length * 10 + 10;
-                rightBorder = place % 10 == 9 ? place : place + 1; 
+                bottomBorder = y == 9 ? y : y + 1;
+                rightBorder = x + length == 9 ? x + length : x + length + 1;
             }
-            
+            else
+            {
+                bottomBorder = y + length == 9 ? y + length : y + length + 1;
+                rightBorder = x == 9 ? x : x + 1;
+            }
+
 
             for (var i = topBorder; i <= bottomBorder; i++)
             {
