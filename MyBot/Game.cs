@@ -127,30 +127,53 @@ namespace MyBot
         {
             var orientation = random.Next(2);
             int place;
-            var coefficient = orientation == 0 ? 1 : 10;
+            
             do
             {
                 place = random.Next(100);
-            } while (!IsValidPlace(field, place, length, coefficient));
+            } while (!IsValidPlace(field, place, length, orientation));
 
+            var coefficient = orientation == 0 ? 1 : 10;
             for (var i = 0; i < length; i++)
             {
                 field[place + i * coefficient] = '1';
             }
         }
 
-        private static bool IsValidPlace(char[] field, int place, int length, int coefficient)
+        private static bool IsValidPlace(char[] field, int place, int length, int orientation)
         {
-            if (place + length * coefficient > 100)
+            if(orientation == 0)
             {
-                return false;
+                if (place % 10 + length >= 10) return false;
+            }
+            else
+            {
+                if (place / 10 + length >= 10) return false;
             }
 
-            for (var i = 0; i < length; i++)
+            int leftBorder, topBorder, rightBorder, bottomBorder;
+            topBorder = place / 10 == 0 ? place : place - 10;
+            leftBorder = place % 10 == 0 ? place : place - 1;
+
+            if (orientation == 0)
             {
-                if (field[place + i * coefficient] == '1')
+                bottomBorder = place / 10 == 9 ? place : place + 10;
+                rightBorder = place % 10 + length == 9 ? place + length : place + length + 1;
+            } else
+            {
+                bottomBorder = place / 10 + length == 9 ? place + length * 10 : place + length * 10 + 10;
+                rightBorder = place % 10 == 9 ? place : place + 1; 
+            }
+            
+
+            for (var i = topBorder; i <= bottomBorder; i++)
+            {
+                for (var j = leftBorder; j <= rightBorder; j++)
                 {
-                    return false;
+                    if (field[i * 10 + j] == '1')
+                    {
+                        return false;
+                    }
                 }
             }
             return true;
