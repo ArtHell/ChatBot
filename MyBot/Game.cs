@@ -33,6 +33,7 @@ namespace MyBot
         private const string SayStartAnswer = "You sould start game before.";
         private const string UserWonAnswer = "You won, congratulations.";
         private const string UserHitAnswer = "You hitted.";
+        private const string UserDeadHitAnswer = "You killed my ship.";
         private const string UserMissAnswer = "You missed.";
         private const string UserTurnAnswer = "Now it\'s your turn.";
         private const string UserLoseAnswer = "Sorry, but you losed.";
@@ -160,6 +161,10 @@ namespace MyBot
                     SaveGameInfo();
                     return UserWonAnswer;
                 }
+                else if(IsEmptyCellsAround(index))
+                {
+                    return UserDeadHitAnswer;
+                }
                 else
                 {
                     return UserHitAnswer;
@@ -169,6 +174,31 @@ namespace MyBot
             {
                 return UserMissAnswer + " " + MakeGuess();
             }
+        }
+
+        private bool IsEmptyCellsAround(int index)
+        {
+            if (index - 1 >= 0 && myField[index - 1] == '1')
+            {
+                return false;
+            }
+
+            if (index + 1 < 100 && myField[index + 1] == '1')
+            {
+                return false;
+            }
+
+            if (index - 10 >= 0 && myField[index - 10] == '1')
+            {
+                return false;
+            }
+
+            if (index + 10 >= 0 && myField[index + 10] == '1')
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private string Start()
