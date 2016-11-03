@@ -18,17 +18,6 @@ namespace MyBot
         private char[] myField;
         private char[] enemyField;
 
-        private const string RandomField = "1010000000" +
-                                           "1010010000" +
-                                           "1010000000" +
-                                           "1000100000" +
-                                           "0010000000" +
-                                           "1010000000" +
-                                           "1010000100" +
-                                           "0000000000" +
-                                           "1010010000" +
-                                           "1010000000";
-
         private const string BadRequestAnswer = "Can you repeat, please?";
         private const string SayStartAnswer = "You sould start game before.";
         private const string UserWonAnswer = "You won, congratulations.";
@@ -106,9 +95,65 @@ namespace MyBot
 
         private char[] GenerateShips()
         {
-            var field = RandomField.ToCharArray();
+            var field = RandomField();
 
             return field;
+        }
+
+        private char[] RandomField()
+        {
+            var field = EmptyField();
+
+            AddShip(field, 4);
+
+            for (var i = 0; i < 2; i++)
+            {
+                AddShip(field, 3);
+            }
+
+            for (var i = 0; i < 3; i++)
+            {
+                AddShip(field, 2);
+            }
+
+            for (var i = 0; i < 4; i++)
+            {
+                AddShip(field, 1);
+            }
+            return field;
+        }
+
+        private void AddShip(char[] field, int length)
+        {
+            var orientation = random.Next(2);
+            int place;
+            var coefficient = orientation == 0 ? 1 : 10;
+            do
+            {
+                place = random.Next(100);
+            } while (!IsValidPlace(field, place, length, coefficient));
+
+            for (var i = 0; i < length; i++)
+            {
+                field[place + i * coefficient] = '1';
+            }
+        }
+
+        private static bool IsValidPlace(char[] field, int place, int length, int coefficient)
+        {
+            if (place + length * coefficient > 100)
+            {
+                return false;
+            }
+
+            for (var i = 0; i < length; i++)
+            {
+                if (field[place + i * coefficient] == '1')
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         private char[] EmptyField()
