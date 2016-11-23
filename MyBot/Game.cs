@@ -18,7 +18,9 @@ namespace MyBot
         private char[] myField;
         private char[] enemyField;
 
-        private const string BadRequestAnswer = "Can you repeat, please?";
+        private const string BadRequestAnswer = "Unfortunately I did not understand you.";
+        private const string GreetingsMessage = "Hello!";
+        private const string HelpMessage = "\tHere are examples of messages that I can recognize:\t1) Let's start!\t2) Line 3 colomn d\t3) miss\t4) hit\t5) kill";
         private const string SayStartAnswer = "You sould start game before.";
         private const string UserWonAnswer = "You won, congratulations.";
         private const string UserHitAnswer = "You hitted.";
@@ -39,7 +41,8 @@ namespace MyBot
                     { "Hit", Hit },
                     { "Negative answer", NegativeAnswer },
                     { "Positive answer", PositiveAnswer },
-                    { "Dead answer", DeadAnswer }
+                    { "Dead answer", DeadAnswer },
+                    {"Greetings", Greet }
                 };
 
 
@@ -49,7 +52,7 @@ namespace MyBot
         {
             if (!methods.ContainsKey(method))
             {
-                return BadRequestAnswer;
+                return BadRequestAnswer + HelpMessage;
             }
 
             var info = gameInfoRepository.GetGameInfo(recipientId);
@@ -83,6 +86,12 @@ namespace MyBot
             }
             return methods[method]();
         }
+
+        private string Greet()
+        {
+            return GreetingsMessage + HelpMessage;
+        }
+
 
         private void StartNewGame()
         {

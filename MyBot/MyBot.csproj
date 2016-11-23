@@ -156,11 +156,9 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\GameInfo.cs" />
-    <Compile Include="Models\Intent.cs" />
     <Compile Include="Repositories\GameInfoRepository.cs" />
     <Compile Include="Service\Luis.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
-    <Compile Include="Models\ResponseFromLUIS.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

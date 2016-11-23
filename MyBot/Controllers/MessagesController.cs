@@ -23,14 +23,7 @@ namespace MyBot.Controllers
 
                 var answer = Luis.Analyze(activity.Text);
 
-                var intents = new List<Intent>();
-
-                foreach (var intent in answer.intents)
-                {
-                    intents.Add(new Intent() { Type = intent.intent, Score = intent.score });
-                }
-
-                var type = intents.OrderByDescending(x => x.Score).First().Type;
+                var type = answer.topScoringIntent.intent.Value;
                 string gameReply;
                 if (type == "Hit")
                 {
