@@ -20,7 +20,7 @@ namespace MyBot
 
         private const string BadRequestAnswer = "Unfortunately I did not understand you.";
         private const string GreetingsMessage = "Hello!";
-        private const string HelpMessage = "\tHere are examples of messages that I can recognize:\t1) Let's start!\t2) Line 3 colomn d\t3) miss\t4) hit\t5) kill";
+        private const string HelpMessage = "\nHere are examples of messages that I can recognize:\n1) Let's start!\n2) Line 3 colomn d\n3) miss\n4) hit\n5) kill";
         private const string SayStartAnswer = "You sould start game before.";
         private const string UserWonAnswer = "You won, congratulations.";
         private const string UserHitAnswer = "You hitted.";
