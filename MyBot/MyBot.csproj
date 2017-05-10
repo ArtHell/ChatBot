@@ -119,26 +119,30 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bootstrap-theme.css" />
-    <Content Include="Content\bootstrap-theme.min.css" />
-    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\animate.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\css-app.css" />
+    <Content Include="Content\font-awesome.min.css" />
+    <Content Include="Content\owl.carousel.css" />
+    <Content Include="Content\owl.theme.css" />
     <Content Include="default.htm" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="fonts\icon-7-stroke\css\helper.css" />
+    <Content Include="fonts\icon-7-stroke\css\pe-icon-7-stroke.css" />
+    <Content Include="fonts\icon-7-stroke\fonts\Pe-icon-7-stroke.svg" />
     <Content Include="Global.asax" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\bootstrap.min.css.map" />
-    <Content Include="Content\bootstrap.css.map" />
-    <Content Include="Content\bootstrap-theme.min.css.map" />
-    <Content Include="Content\bootstrap-theme.css.map" />
-    <None Include="Scripts\jquery-1.9.1-vsdoc.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\jquery-1.9.1.js" />
-    <Content Include="Scripts\jquery-1.9.1.min.js" />
+    <Content Include="Scripts\custom.js" />
+    <Content Include="Scripts\ekko-lightbox-min.js" />
+    <Content Include="Scripts\jquery.js" />
+    <Content Include="Scripts\jquery.sticky.js" />
+    <Content Include="Scripts\owl.carousel.min.js" />
+    <Content Include="Scripts\wow.min.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -168,8 +172,10 @@
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="fonts\icon-7-stroke\fonts\Pe-icon-7-stroke.eot" />
+    <Content Include="fonts\icon-7-stroke\fonts\Pe-icon-7-stroke.ttf" />
+    <Content Include="fonts\icon-7-stroke\fonts\Pe-icon-7-stroke.woff" />
     <None Include="Properties\PublishProfiles\bitcup.pubxml" />
-    <Content Include="Scripts\jquery-1.9.1.min.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
