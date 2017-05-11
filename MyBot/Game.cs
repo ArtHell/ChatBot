@@ -465,7 +465,7 @@ namespace MyBot
                     if (IsHitNear(gameInfo.EnemyLine * 10 + gameInfo.EnemyColumn))
                     {
                         index = GetToHitIndex(gameInfo.EnemyLine * 10 + gameInfo.EnemyColumn);
-                        if (index < 0 || index >= 100 || index == '1')
+                        if (index % 10 > 9 || index / 10 > 9 || index == '1')
                         {
                             index = gameInfo.EnemyLine * 10 + gameInfo.EnemyColumn;
                             while (IsHitNear(index))
