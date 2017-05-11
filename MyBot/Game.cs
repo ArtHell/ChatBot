@@ -200,7 +200,7 @@ namespace MyBot
         private string DeadAnswer()
         {
             gameInfo.EnemyAliveCells--;
-            if (gameInfo.EnemyAliveCells != 0) return MakeGuess();
+            if (gameInfo.EnemyAliveCells != 0) return MakeGuess(false, false, true);
             gameInfo.GameStarted = false;
             SaveGameInfo();
             return UserLoseAnswer;
@@ -216,7 +216,7 @@ namespace MyBot
         private string PositiveAnswer()
         {
             gameInfo.EnemyAliveCells--;
-            if (gameInfo.EnemyAliveCells != 0) return MakeGuess();
+            if (gameInfo.EnemyAliveCells != 0) return MakeGuess(false, true);
             gameInfo.GameStarted = false;
             SaveGameInfo();
             return UserLoseAnswer;
@@ -281,22 +281,246 @@ namespace MyBot
             return true;
         }
 
+        private bool IsHitNear(int index)
+        {
+            if (index - 1 >= 0 && myField[index - 1] == '2')
+            {
+                return true;
+            }
+
+            if (index + 1 < 100 && myField[index + 1] == '2')
+            {
+                return true;
+            }
+
+            if (index - 10 >= 0 && myField[index - 10] == '2')
+            {
+                return true;
+            }
+
+            if (index + 10 >= 0 && myField[index + 10] == '2')
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private int GetNearHitIndex(int index)
+        {
+            if (index - 1 >= 0 && myField[index - 1] == '2' || myField[index - 1] == '3')
+            {
+                return index - 1;
+            }
+
+            if (index + 1 < 100 && myField[index + 1] == '2' || myField[index + 1] == '3')
+            {
+                return index + 1;
+            }
+
+            if (index - 10 >= 0 && myField[index - 10] == '2' || myField[index - 10] == '3')
+            {
+                return index - 10;
+            }
+
+            if (index + 10 >= 0 && myField[index + 10] == '2' || myField[index + 10] == '3')
+            {
+                return index + 10;
+            }
+
+            return 0;
+        }
+
+        private int GetToHitIndex(int index)
+        {
+            if (index - 1 >= 0 && myField[index - 1] == '2')
+            {
+                return index + 1;
+            }
+
+            if (index + 1 < 100 && myField[index + 1] == '2')
+            {
+                return index - 1;
+            }
+
+            if (index - 10 >= 0 && myField[index - 10] == '2')
+            {
+                return index + 10;
+            }
+
+            if (index + 10 >= 0 && myField[index + 10] == '2')
+            {
+                return index - 10;
+            }
+
+            return 0;
+        }
+
+        private int GetToThreeHitIndex(int index)
+        {
+            if (index - 1 >= 0 && myField[index - 1] == '3')
+            {
+                return index + 1;
+            }
+
+            if (index + 1 < 100 && myField[index + 1] == '3')
+            {
+                return index - 1;
+            }
+
+            if (index - 10 >= 0 && myField[index - 10] == '3')
+            {
+                return index + 10;
+            }
+
+            if (index + 10 >= 0 && myField[index + 10] == '3')
+            {
+                return index - 10;
+            }
+
+            return 0;
+        }
+
         private string Start()
         {
             StartNewGame();
-            return MakeGuess();
+            return MakeGuess(true);
         }
 
-        private string MakeGuess()
+        private int GetNearEmptyIndex(int index)
+        {
+            if (index - 1 >= 0 && myField[index - 1] == '0')
+            {
+                return index - 1;
+            }
+
+            if (index + 1 < 100 && myField[index + 1] == '0')
+            {
+                return index + 1;
+            }
+
+            if (index - 10 >= 0 && myField[index - 10] == '0')
+            {
+                return index - 10;
+            }
+
+            if (index + 10 >= 0 && myField[index + 10] == '0')
+            {
+                return index + 10;
+            }
+
+            return 0;
+        }
+
+        private void SurroundWithMisses(int index)
+        {
+            if (index - 1 >= 0 && myField[index - 1] == '0')
+            {
+                enemyField[index - 1] = '1';
+            }
+
+            if (index + 1 < 100 && myField[index + 1] == '0')
+            {
+                enemyField[index + 1] = '1';
+            }
+
+            if (index - 10 >= 0 && myField[index - 10] == '0')
+            {
+                enemyField[index - 10] = '1';
+            }
+
+            if (index + 10 >= 0 && myField[index + 10] == '0')
+            {
+                enemyField[index + 10] = '1';
+            }
+
+            enemyField[index] = '1';
+        }
+
+        private string MakeGuess(bool isStart = false, bool isHit = false, bool isDead = false)
         {
             int index;
-            do
+            if (!isStart)
             {
-                index = random.Next(100);
-            } while (enemyField[index] != '0');
+                if (isDead)
+                {
+                    enemyField[gameInfo.EnemyLine * 10 + gameInfo.EnemyColumn] = '2';
+                    index = gameInfo.EnemyLine * 10 + gameInfo.EnemyColumn;
+                    while (IsHitNear(index))
+                    {
+                        SurroundWithMisses(index);
+                        index = GetNearHitIndex(index);
+                    }
+
+                    SurroundWithMisses(index);
+
+                    do
+                    {
+                        index = random.Next(100);
+                    } while (enemyField[index] != '0');
+                }
+                else if (isHit)
+                {
+                    enemyField[gameInfo.EnemyLine * 10 + gameInfo.EnemyColumn] = '2';
+                    if (IsHitNear(gameInfo.EnemyLine * 10 + gameInfo.EnemyColumn))
+                    {
+                        index = GetToHitIndex(gameInfo.EnemyLine * 10 + gameInfo.EnemyColumn);
+                        if (index < 0 || index >= 100 || index == '1')
+                        {
+                            index = gameInfo.EnemyLine * 10 + gameInfo.EnemyColumn;
+                            while (IsHitNear(index))
+                            {
+                                enemyField[index] = '3';
+                                index = GetNearHitIndex(index);
+                            }
+                            index = GetToThreeHitIndex(index);
+                        }
+                    }
+                    else
+                    {
+                        index = GetNearEmptyIndex(gameInfo.EnemyLine * 10 + gameInfo.EnemyColumn);
+                    }
+                }
+                else
+                {
+                    enemyField[gameInfo.EnemyLine * 10 + gameInfo.EnemyColumn] = '1';
+                    if (IsHitNear(gameInfo.EnemyLine * 10 + gameInfo.EnemyColumn))
+                    {
+                        index = GetNearHitIndex(gameInfo.EnemyLine * 10 + gameInfo.EnemyColumn);
+                        if (IsHitNear(index))
+                        {
+                            while (IsHitNear(index))
+                            {
+                                enemyField[index] = '3';
+                                index = GetNearHitIndex(index);
+                            }
+                            index = GetToThreeHitIndex(index);
+                        }
+                        else
+                        {
+                            index = GetNearEmptyIndex(index);
+                        }
+                    }
+                    else
+                    {
+                        do
+                        {
+                            index = random.Next(100);
+                        } while (enemyField[index] != '0');
+                    }
+                }
+            }
+            else
+            {
+                do
+                {
+                    index = random.Next(100);
+                } while (enemyField[index] != '0');
+                
+            }
+
             gameInfo.EnemyColumn = index % 10;
             gameInfo.EnemyLine = index / 10;
-            enemyField[index] = '1';
             SaveGameInfo();
             return string.Format(MyHitAnswer, gameInfo.EnemyLine + 1, (char)(gameInfo.EnemyColumn + 65));
         }
