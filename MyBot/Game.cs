@@ -258,22 +258,22 @@ namespace MyBot
 
         private bool IsEmptyCellsAround(int index)
         {
-            if (index - 1 >= 0 && myField[index - 1] == '1')
+            if (index % 10 > 0 && index - 1 >= 0 && myField[index - 1] == '1')
             {
                 return false;
             }
 
-            if (index + 1 < 100 && myField[index + 1] == '1')
+            if (index % 10 < 9 && index + 1 < 100 && myField[index + 1] == '1')
             {
                 return false;
             }
 
-            if (index - 10 >= 0 && myField[index - 10] == '1')
+            if (index / 10 > 0 && index - 10 >= 0 && myField[index - 10] == '1')
             {
                 return false;
             }
 
-            if (index + 10 >= 0 && myField[index + 10] == '1')
+            if (index / 10 < 9 && index + 10 >= 0 && myField[index + 10] == '1')
             {
                 return false;
             }
@@ -283,22 +283,22 @@ namespace MyBot
 
         private bool IsHitNear(int index)
         {
-            if (index - 1 >= 0 && myField[index - 1] == '2')
+            if (index % 10 > 0 && index - 1 >= 0 && myField[index - 1] == '2')
             {
                 return true;
             }
 
-            if (index + 1 < 100 && myField[index + 1] == '2')
+            if (index % 10 < 9 && index + 1 < 100 && myField[index + 1] == '2')
             {
                 return true;
             }
 
-            if (index - 10 >= 0 && myField[index - 10] == '2')
+            if (index / 10 > 0 && index - 10 >= 0 && myField[index - 10] == '2')
             {
                 return true;
             }
 
-            if (index + 10 >= 0 && myField[index + 10] == '2')
+            if (index / 10 < 9 && index + 10 >= 0 && myField[index + 10] == '2')
             {
                 return true;
             }
@@ -308,22 +308,22 @@ namespace MyBot
 
         private int GetNearHitIndex(int index)
         {
-            if (index - 1 >= 0 && myField[index - 1] == '2' || myField[index - 1] == '3')
+            if (index % 10 > 0 && index - 1 >= 0 && myField[index - 1] == '2' || myField[index - 1] == '3')
             {
                 return index - 1;
             }
 
-            if (index + 1 < 100 && myField[index + 1] == '2' || myField[index + 1] == '3')
+            if (index % 10 < 9 && index + 1 < 100 && myField[index + 1] == '2' || myField[index + 1] == '3')
             {
                 return index + 1;
             }
 
-            if (index - 10 >= 0 && myField[index - 10] == '2' || myField[index - 10] == '3')
+            if (index / 10 > 0 && index - 10 >= 0 && myField[index - 10] == '2' || myField[index - 10] == '3')
             {
                 return index - 10;
             }
 
-            if (index + 10 >= 0 && myField[index + 10] == '2' || myField[index + 10] == '3')
+            if (index / 10 < 9 && index + 10 >= 0 && myField[index + 10] == '2' || myField[index + 10] == '3')
             {
                 return index + 10;
             }
@@ -389,22 +389,22 @@ namespace MyBot
 
         private int GetNearEmptyIndex(int index)
         {
-            if (index - 1 >= 0 && myField[index - 1] == '0')
+            if (index % 10 > 0 && index - 1 >= 0 && myField[index - 1] == '0')
             {
                 return index - 1;
             }
 
-            if (index + 1 < 100 && myField[index + 1] == '0')
+            if (index % 10 < 9 && index + 1 < 100 && myField[index + 1] == '0')
             {
                 return index + 1;
             }
 
-            if (index - 10 >= 0 && myField[index - 10] == '0')
+            if (index / 10 > 0 && index - 10 >= 0 && myField[index - 10] == '0')
             {
                 return index - 10;
             }
 
-            if (index + 10 >= 0 && myField[index + 10] == '0')
+            if (index / 10 < 9 && index + 10 >= 0 && myField[index + 10] == '0')
             {
                 return index + 10;
             }
@@ -414,22 +414,22 @@ namespace MyBot
 
         private void SurroundWithMisses(int index)
         {
-            if (index - 1 >= 0 && myField[index - 1] == '0')
+            if (index % 10 > 0 && index - 1 >= 0 && myField[index - 1] == '0')
             {
                 enemyField[index - 1] = '1';
             }
 
-            if (index + 1 < 100 && myField[index + 1] == '0')
+            if (index % 10 < 9 && index + 1 < 100 && myField[index + 1] == '0')
             {
                 enemyField[index + 1] = '1';
             }
 
-            if (index - 10 >= 0 && myField[index - 10] == '0')
+            if (index / 10 > 0 && index - 10 >= 0 && myField[index - 10] == '0')
             {
                 enemyField[index - 10] = '1';
             }
 
-            if (index + 10 >= 0 && myField[index + 10] == '0')
+            if (index / 10 < 9 && index + 10 >= 0 && myField[index + 10] == '0')
             {
                 enemyField[index + 10] = '1';
             }
